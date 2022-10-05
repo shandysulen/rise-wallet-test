@@ -18,7 +18,7 @@ const Index = () => {
   const formattedAddress = useMemo(() => address ? getFormattedAddress(address) : address, [address]);
 
   return (
-    <Center height="100vh" flexDir='column' align='center'>
+    <Center height="100vh" flexDir='column' alignItems='center'>
       <Button
         leftIcon={<Image src='/rise-wallet.png' boxSize='24px' />}
         onClick={address ? disconnect : connect}
