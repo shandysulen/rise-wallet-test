@@ -1,56 +1,37 @@
-import {
-  Link as ChakraLink,
-  Text,
-  Code,
-  List,
-  ListIcon,
-  ListItem,
-} from '@chakra-ui/react'
-import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
+import { Button, Center, Image, FormHelperText, FormControl } from '@chakra-ui/react';
+import { useCallback, useMemo, useState } from 'react';
+import { getFormattedAddress } from '../utils';
 
-import { Hero } from '../components/Hero'
-import { Container } from '../components/Container'
-import { Main } from '../components/Main'
-import { DarkModeSwitch } from '../components/DarkModeSwitch'
-import { CTA } from '../components/CTA'
-import { Footer } from '../components/Footer'
+const Index = () => {
+  const [address, setAddress] = useState('');
 
-const Index = () => (
-  <Container height="100vh">
-    <Hero />
-    <Main>
-      <Text color="text">
-        Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{' '}
-        <Code>TypeScript</Code>.
-      </Text>
+  const connect = useCallback(async () => {
+    await (window as any).rise.connect();
+    setAddress((window as any).rise.account().address);
+  }, []);
 
-      <List spacing={3} my={0} color="text">
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink
-            isExternal
-            href="https://chakra-ui.com"
-            flexGrow={1}
-            mr={2}
-          >
-            Chakra UI <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink isExternal href="https://nextjs.org" flexGrow={1} mr={2}>
-            Next.js <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-      </List>
-    </Main>
+  const disconnect = useCallback(async () => {
+    await (window as any).rise.disconnect();
+    setAddress((window as any).rise.account().address);
+  }, []);
 
-    <DarkModeSwitch />
-    <Footer>
-      <Text>Next ❤️ Chakra</Text>
-    </Footer>
-    <CTA />
-  </Container>
-)
+  const formattedAddress = useMemo(() => address ? getFormattedAddress(address) : address, [address]);
 
-export default Index
+  return (
+    <Center height="100vh" flexDir='column' align='center'>
+      <Button
+        leftIcon={<Image src='/rise-wallet.png' boxSize='24px' />}
+        onClick={address ? disconnect : connect}
+      >
+        {address ? 'Disconnect' : 'Connect'} Wallet
+      </Button>
+      {address && (
+        <FormControl>
+          <FormHelperText>Logged in as {formattedAddress}</FormHelperText>
+        </FormControl>
+      )}
+    </Center>
+  );
+};
+
+export default Index;
