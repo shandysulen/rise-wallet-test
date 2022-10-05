@@ -1,4 +1,4 @@
-import { Button, Center, Image, FormHelperText, FormControl } from '@chakra-ui/react';
+import { Button, Center, Image, Text } from '@chakra-ui/react';
 import { useCallback, useMemo, useState } from 'react';
 import { getFormattedAddress } from '../utils';
 
@@ -26,9 +26,7 @@ const Index = () => {
         {address ? 'Disconnect' : 'Connect'} Wallet
       </Button>
       {address && (
-        <FormControl>
-          <FormHelperText>Logged in as {formattedAddress}</FormHelperText>
-        </FormControl>
+        <Text as='span' color='gray.500' fontSize='12px'>Logged in as {formattedAddress}</Text>
       )}
     </Center>
   );
